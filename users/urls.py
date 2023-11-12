@@ -1,6 +1,6 @@
 from django.urls import path
 
-from users.views import login, registration, get_all_users, get_user_by_id, create_user
+from users.views import login, registration, get_all_users, get_user_by_id, create_user, get_user_email
 
 app_name = 'users'
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path('get_user_by_id/', get_user_by_id, name="get_user_by_id"),
     path('get_user_by_id/', get_user_by_id, name="get_user_by_id"),
     path('create_user/', create_user, name="create_user"),
+    path('get_user_email/', get_user_email, name="get_user_email"),
 ]

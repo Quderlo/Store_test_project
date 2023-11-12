@@ -48,9 +48,21 @@ def get_user_by_id(request):
     return Response(user_data)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 @renderer_classes([JSONRenderer])
 def create_user(request):
+    if request.method == 'GET':
+        # Обработка GET-запроса, например, отображение страницы с формой
+        return render(request, 'users/create_user.html')
+    elif request.method == 'POST':
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
     # username = request.POST.get('username', None)
     # email = request.POST.get('email', None)
     # if not username or not email:
@@ -72,12 +84,19 @@ def create_user(request):
     #     email=email,
     # )
     #
-    #
     # new_user.save()
-    serializer = UserSerializer(data={'username': "lev", 'email': 47343})
-    serializer.is_valid()
-    print(serializer.errors)
+    # serializer = UserSerializer
     # new_user_info = serializer(new_user).data
     # return Response(new_user_info)
+
+
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
+def get_user_email(request):
+    user_id = request.GET.get('id')
+    user_data = User.objects.get(id=user_id)
+    email = user_data.email
+    data = {'email': email}
+    return Response(data)
 
 # https://www.django-rest-framework.org/tutorial/1-serialization/#writing-regular-django-views-using-our-serializer
